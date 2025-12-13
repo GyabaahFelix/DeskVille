@@ -4,12 +4,14 @@ import { Navbar } from '../components/Navbar';
 import { Button } from '../components/ui/Button';
 import { listingService, bookingService } from '../services/api';
 import { useAuthStore } from '../store/useAuthStore';
+import { useToastStore } from '../store/useToastStore';
 import { Listing, Booking } from '../types';
 
 export const ListingDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuthStore();
+  const { addToast } = useToastStore();
   const [listing, setListing] = useState<Listing | null>(null);
   const [loading, setLoading] = useState(true);
   const [bookingDate, setBookingDate] = useState('');
@@ -28,10 +30,11 @@ export const ListingDetails = () => {
   const handleBookClick = () => {
     if (!isAuthenticated) {
       navigate('/login', { state: { from: `/listings/${id}` } });
+      addToast('info', 'Please log in to book a space');
       return;
     }
     if(!bookingDate) {
-        alert("Please select a date");
+        addToast('error', "Please select a date for your booking");
         return;
     }
     setShowPaymentModal(true);
@@ -53,10 +56,10 @@ export const ListingDetails = () => {
             status: 'completed'
         };
         await bookingService.create(newBooking);
-        alert('Booking successful!');
+        addToast('success', 'Booking confirmed successfully!');
         navigate('/dashboard/bookings');
     } catch (e) {
-        alert('Payment failed');
+        addToast('error', 'Payment failed. Please try again.');
     } finally {
         setIsBooking(false);
         setShowPaymentModal(false);
@@ -151,19 +154,22 @@ export const ListingDetails = () => {
       {/* Mock Payment Modal */}
       {showPaymentModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-xl w-full max-w-md shadow-2xl">
+            <div className="bg-white p-6 rounded-xl w-full max-w-md shadow-2xl animate-fade-in">
                 <h3 className="text-xl font-bold mb-4">Confirm Payment</h3>
                 <p className="text-gray-600 mb-6">Pay <strong>₵{listing.price * 8}</strong> to secure your booking at {listing.title}.</p>
                 
                 <div className="space-y-3 mb-6">
-                    <button className="w-full p-3 border border-gray-200 rounded-lg flex items-center hover:bg-gray-50">
-                        <span className="font-semibold ml-2">📱 Mobile Money (MTN/Voda)</span>
+                    <button className="w-full p-3 border border-gray-200 rounded-lg flex items-center hover:bg-gray-50 transition-colors">
+                        <span className="text-xl mr-3">📱</span>
+                        <span className="font-semibold text-gray-700">Mobile Money (MTN/Voda)</span>
                     </button>
-                    <button className="w-full p-3 border border-gray-200 rounded-lg flex items-center hover:bg-gray-50">
-                        <span className="font-semibold ml-2">💳 Credit Card</span>
+                    <button className="w-full p-3 border border-gray-200 rounded-lg flex items-center hover:bg-gray-50 transition-colors">
+                        <span className="text-xl mr-3">💳</span>
+                        <span className="font-semibold text-gray-700">Credit Card</span>
                     </button>
-                    <button className="w-full p-3 border border-gray-200 rounded-lg flex items-center hover:bg-gray-50">
-                        <span className="font-semibold ml-2">👛 Hubtel / Zeepay</span>
+                    <button className="w-full p-3 border border-gray-200 rounded-lg flex items-center hover:bg-gray-50 transition-colors">
+                        <span className="text-xl mr-3">👛</span>
+                        <span className="font-semibold text-gray-700">Hubtel / Zeepay</span>
                     </button>
                 </div>
 

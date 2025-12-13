@@ -4,8 +4,11 @@ import { Landing } from './pages/Landing';
 import { BrowseListings } from './pages/BrowseListings';
 import { ListingDetails } from './pages/ListingDetails';
 import { Login } from './pages/Login';
+import { Register } from './pages/Register';
 import { DashboardLayout } from './pages/Dashboard/DashboardLayout';
 import { UserBookings } from './pages/Dashboard/UserBookings';
+import { UserFavorites } from './pages/Dashboard/UserFavorites';
+import { UserProfile } from './pages/Dashboard/UserProfile';
 import { ProviderOverview } from './pages/Dashboard/ProviderOverview';
 import { About } from './pages/About';
 import { Pricing } from './pages/Pricing';
@@ -14,14 +17,16 @@ import { Contact } from './pages/Contact';
 import { Safety } from './pages/Safety';
 import { Privacy } from './pages/Privacy';
 import { Terms } from './pages/Terms';
+import { ToastContainer } from './components/ui/ToastContainer';
 
 function App() {
   return (
     <HashRouter>
+      <ToastContainer />
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Login />} /> {/* Using Login for demo simplification */}
+        <Route path="/register" element={<Register />} />
         <Route path="/listings" element={<BrowseListings />} />
         <Route path="/listings/:id" element={<ListingDetails />} />
         
@@ -38,7 +43,8 @@ function App() {
         <Route path="/dashboard" element={<DashboardLayout />}>
            <Route path="" element={<Navigate to="bookings" replace />} />
            <Route path="bookings" element={<UserBookings />} />
-           {/* Add Favorites, Profile placeholders here */}
+           <Route path="favorites" element={<UserFavorites />} />
+           <Route path="profile" element={<UserProfile />} />
         </Route>
 
         {/* Provider Dashboard */}

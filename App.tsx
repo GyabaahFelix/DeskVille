@@ -10,6 +10,8 @@ import { UserBookings } from './pages/Dashboard/UserBookings';
 import { UserFavorites } from './pages/Dashboard/UserFavorites';
 import { UserProfile } from './pages/Dashboard/UserProfile';
 import { ProviderOverview } from './pages/Dashboard/ProviderOverview';
+import { ProviderListings } from './pages/Dashboard/ProviderListings';
+import { ProviderCreateListing } from './pages/Dashboard/ProviderCreateListing';
 import { About } from './pages/About';
 import { Pricing } from './pages/Pricing';
 import { Help } from './pages/Help';
@@ -51,7 +53,9 @@ function App() {
         <Route path="/provider" element={<DashboardLayout />}>
            <Route path="" element={<Navigate to="dashboard" replace />} />
            <Route path="dashboard" element={<ProviderOverview />} />
-           {/* Add Manage Listings, Calendar placeholders here */}
+           <Route path="listings" element={<ProviderListings />} />
+           <Route path="listings/new" element={<ProviderCreateListing />} />
+           {/* Calendar placeholder to be added later */}
         </Route>
 
         {/* Admin Dashboard */}

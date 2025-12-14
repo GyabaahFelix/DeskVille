@@ -1,23 +1,46 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Listing } from '../types';
+import { useFavoritesStore } from '../store/useFavoritesStore';
 
 interface ListingCardProps {
   listing: Listing;
 }
 
 export const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
+  const { isFavorite, toggleFavorite } = useFavoritesStore();
+  const favorite = isFavorite(listing.id);
+
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleFavorite(listing.id);
+  };
+
   return (
-    <Link to={`/listings/${listing.id}`} className="group block bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow overflow-hidden">
+    <Link to={`/listings/${listing.id}`} className="group block bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow overflow-hidden relative">
       <div className="relative h-48 overflow-hidden">
         <img 
           src={listing.image} 
           alt={listing.title} 
           className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
         />
-        <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold text-gray-800 uppercase tracking-wide">
+        <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold text-gray-800 uppercase tracking-wide">
           {listing.category}
         </div>
+        <button 
+            onClick={handleFavoriteClick}
+            className="absolute top-3 right-3 p-2 rounded-full bg-white/80 hover:bg-white text-gray-400 hover:text-red-500 transition-colors shadow-sm"
+        >
+            <svg 
+                className={`w-5 h-5 transition-colors ${favorite ? 'text-red-500 fill-current' : 'fill-none'}`} 
+                viewBox="0 0 24 24" 
+                stroke="currentColor" 
+                strokeWidth={2}
+            >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+        </button>
       </div>
       <div className="p-4">
         <div className="flex justify-between items-start mb-2">
